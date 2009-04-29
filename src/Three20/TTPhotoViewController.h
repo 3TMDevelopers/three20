@@ -5,9 +5,7 @@
 
 @class TTScrollView, TTPhotoView;
 
-@interface TTPhotoViewController : TTViewController
-    <TTScrollViewDelegate, TTScrollViewDataSource, TTPhotoSourceDelegate,
-      TTThumbsViewControllerDelegate> {
+@interface TTPhotoViewController : TTViewController<TTScrollViewDelegate, TTScrollViewDataSource, TTPhotoSourceDelegate, TTThumbsViewControllerDelegate> {
   id<TTPhotoSource> _photoSource;
   id<TTPhoto> _centerPhoto;
   NSUInteger _centerPhotoIndex;
@@ -23,7 +21,10 @@
   NSTimer* _slideshowTimer;
   NSTimer* _loadTimer;
   BOOL _delayLoad;
+  BOOL _showThumbnailsButton;
 }
+
+- (void)moveToPhotoAtIndex:(NSInteger)photoIndex withDelay:(BOOL)withDelay;
 
 /**
  * The source of a sequential photo collection that will be displayed.
@@ -63,5 +64,8 @@
  * Do not call this directly. It is meant to be overriden by subclasses.
  */
 - (TTThumbsViewController*)createThumbsViewController;
+
+
+@property(nonatomic,assign) BOOL showThumbnailsButton;
 
 @end

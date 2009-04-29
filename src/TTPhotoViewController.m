@@ -16,7 +16,8 @@ static const NSTimeInterval kSlideshowInterval = 2;
 @implementation TTPhotoViewController
 
 @synthesize photoSource = _photoSource, centerPhoto = _centerPhoto,
-  centerPhotoIndex = _centerPhotoIndex, defaultImage = _defaultImage;
+  centerPhotoIndex = _centerPhotoIndex, defaultImage = _defaultImage,
+  showThumbnailsButton = _showThumbnailsButton;
 
 - (id)init {
   if (self = [super init]) {
@@ -33,6 +34,8 @@ static const NSTimeInterval kSlideshowInterval = 2;
     _slideshowTimer = nil;
     _loadTimer = nil;
     _delayLoad = NO;
+	_showThumbnailsButton = YES;
+	  
     self.defaultImage = TTIMAGE(@"bundle://Three20.bundle/images/photoDefault.png");
     
     self.hidesBottomBarWhenPushed = YES;
@@ -114,7 +117,7 @@ static const NSTimeInterval kSlideshowInterval = 2;
   [self updateTitle];
 
   if (![self.previousViewController isKindOfClass:[TTThumbsViewController class]]) {
-    if (_photoSource.numberOfPhotos > 1) {
+    if (_photoSource.numberOfPhotos > 1 && self.showThumbnailsButton) {
       self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
         initWithTitle:TTLocalizedString(@"See All", @"See all photo thumbnails")
         style:UIBarButtonItemStyleBordered target:self action:@selector(showThumbnails)];
@@ -295,8 +298,7 @@ static const NSTimeInterval kSlideshowInterval = 2;
 
 - (void)showBarsAnimationDidStop {
   _innerView.top = -CHROME_HEIGHT;
-  self.view.top = TOOLBAR_HEIGHT;
-  self.view.height -= TOOLBAR_HEIGHT;
+  self.view.top = 0.0f;
 
   self.navigationController.navigationBarHidden = NO;
 }
@@ -304,7 +306,6 @@ static const NSTimeInterval kSlideshowInterval = 2;
 - (void)hideBarsAnimationDidStop {
   _innerView.top = -STATUS_HEIGHT;
   self.view.top = 0;
-  self.view.height += TOOLBAR_HEIGHT;
   
   self.navigationController.navigationBarHidden = YES;
 }

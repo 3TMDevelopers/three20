@@ -297,15 +297,17 @@ static const NSTimeInterval kSlideshowInterval = 2;
 }
 
 - (void)showBarsAnimationDidStop {
-  _innerView.top = -CHROME_HEIGHT;
-  self.view.top = 0.0f;
+  //_innerView.top = -CHROME_HEIGHT;
+	
+	self.view.frame = CGRectMake(0.0f, 0.0f, 320.0f, 480.0f);
+	_innerView.frame = CGRectMake(0.0f, -64.0f, 320.0f, 480.0f);
 
   self.navigationController.navigationBarHidden = NO;
 }
 
 - (void)hideBarsAnimationDidStop {
-  _innerView.top = -STATUS_HEIGHT;
-  self.view.top = 0;
+	self.view.frame = CGRectMake(0.0f, 0.0f, 320.0f, 480.0f);
+	_innerView.frame = CGRectMake(0.0f, -20.0f, 320.0f, 480.0f);
   
   self.navigationController.navigationBarHidden = YES;
 }

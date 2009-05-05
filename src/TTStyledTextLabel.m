@@ -73,6 +73,22 @@ static const CGFloat kCancelHighlightThreshold = 4;
   
   CGPoint origin = CGPointMake(rect.origin.x + _contentInset.left,
                                rect.origin.y + _contentInset.top);
+
+  if(self.textAlignment == UITextAlignmentRight || self.textAlignment == UITextAlignmentCenter) {
+    CGFloat textWidth = 0.0f;
+    TTStyledFrame* frame = _text.rootFrame;
+    while (frame) {
+      textWidth += frame.width;
+      frame = frame.nextFrame;
+    }
+
+    if(self.textAlignment == UITextAlignmentRight) {
+      origin.x = origin.x + rect.size.width - textWidth;
+    } else if(self.textAlignment == UITextAlignmentCenter) {
+      origin.x = origin.x + floor((rect.size.width - textWidth) / 2);
+    }
+  }
+
   [_text drawAtPoint:origin highlighted:_highlighted];
 }
 

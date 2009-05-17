@@ -2,6 +2,7 @@
 #import <UIKit/UIKit.h>
 #import "Three20/NSObjectAdditions.h"
 #import "Three20/NSStringAdditions.h"
+#import "Three20/NSDateAdditions.h"
 #import "Three20/NSArrayAdditions.h"
 #import "Three20/UIColorAdditions.h"
 #import "Three20/UIImageAdditions.h"
@@ -121,6 +122,11 @@ typedef enum {
  * Creates a mutable array which does not retain references to the objects it contains.
  */
 NSMutableArray* TTCreateNonRetainingArray();
+
+/**
+ * Creates a mutable dictionary which does not retain references to the values it contains.
+ */
+NSMutableDictionary* TTCreateNonRetainingDictionary();
 
 /**
  * Tests if an object is an array which is empty.

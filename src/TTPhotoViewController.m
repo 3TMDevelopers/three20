@@ -14,6 +14,11 @@ static const NSTimeInterval kSlideshowInterval = 2;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+@interface UIViewController (iPhoneOS3_0)
+- (void)setWantsFullScreenLayout:(BOOL)wantsFullScreenLayout;
+@end
+
+
 @implementation TTPhotoViewController
 
 @synthesize photoSource = _photoSource, centerPhoto = _centerPhoto,

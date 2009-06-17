@@ -132,7 +132,10 @@
   UITextAutocorrectionType _autocorrectionType;
   UITextFieldViewMode _clearButtonMode;
   BOOL _secureTextEntry;
-
+  UITextAlignment _textAlignment;
+  UIFont* _font;
+  UIColor* _textColor;
+  UIEdgeInsets _fieldInsets;
 }
 
 @property(nonatomic,assign) id<UITextFieldDelegate> delegate;
@@ -143,7 +146,11 @@
 @property(nonatomic) UITextAutocapitalizationType autocapitalizationType;
 @property(nonatomic) UITextAutocorrectionType autocorrectionType;
 @property(nonatomic) UITextFieldViewMode clearButtonMode;
+@property(nonatomic) UITextAlignment textAlignment;
+@property(nonatomic,retain) UIFont* font;
+@property(nonatomic,retain) UIColor* textColor;
 @property(nonatomic) BOOL secureTextEntry;
+@property(nonatomic, assign) UIEdgeInsets fieldInsets;
 
 - (id)initWithTitle:(NSString*)title;
 - (id)initWithTitle:(NSString*)title text:(NSString*)text;

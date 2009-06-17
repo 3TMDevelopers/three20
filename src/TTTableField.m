@@ -265,7 +265,9 @@
 @synthesize delegate = _delegate, title = _title, placeholder = _placeholder,
   returnKeyType = _returnKeyType, keyboardType = _keyboardType,
   autocorrectionType = _autocorrectionType, autocapitalizationType = _autocapitalizationType,
-  clearButtonMode = _clearButtonMode, secureTextEntry = _secureTextEntry;
+  clearButtonMode = _clearButtonMode, secureTextEntry = _secureTextEntry,
+  textAlignment = _textAlignment, font = _font, textColor = _textColor,
+  fieldInsets = _fieldInsets;
 
 - (id)init {
   if (self = [super init]) {
@@ -278,7 +280,12 @@
     _autocorrectionType = UITextAutocorrectionTypeDefault;
     _clearButtonMode = UITextFieldViewModeNever;
     _secureTextEntry = NO;
+    _textAlignment = UITextAlignmentLeft;
+    _font = [[UIFont systemFontOfSize:14.0f] retain];
+    _textColor = [[UIColor blackColor] retain];
+    _fieldInsets = UIEdgeInsetsMake(0, 0, 0, 0);
   }
+			 
   return self;
 }
 
@@ -297,6 +304,8 @@
 }
 
 - (void)dealloc {
+  [_font release];
+  [_textColor release];
   [_title release];
   [_placeholder release];
   [super dealloc];

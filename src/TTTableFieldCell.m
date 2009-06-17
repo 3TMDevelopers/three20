@@ -864,7 +864,17 @@ static CGFloat kDefaultIconSize = 50;
   [_label sizeToFit];
   _label.width = kTextFieldTitleWidth;
   
-  _textField.frame = CGRectOffset(CGRectInset(self.contentView.bounds, 3, 0), 0, 1);
+  CGRect adjustedFrame = CGRectOffset(CGRectInset(self.contentView.bounds, 3, 0), 0, 1);
+  adjustedFrame.origin.x += ((TTTextFieldTableField*)_field).fieldInsets.left;
+  adjustedFrame.origin.y += ((TTTextFieldTableField*)_field).fieldInsets.top;
+  
+  adjustedFrame.size.width -= ((TTTextFieldTableField*)_field).fieldInsets.left;
+  adjustedFrame.size.width -= ((TTTextFieldTableField*)_field).fieldInsets.right;
+  
+  adjustedFrame.size.height -= ((TTTextFieldTableField*)_field).fieldInsets.top;
+  adjustedFrame.size.height -= ((TTTextFieldTableField*)_field).fieldInsets.bottom;
+  
+  _textField.frame = adjustedFrame;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -890,6 +900,10 @@ static CGFloat kDefaultIconSize = 50;
     _textField.leftViewMode = UITextFieldViewModeAlways;
     _textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _textField.delegate = self;
+    _textField.textAlignment = field.textAlignment;
+    
+    if(field.font) _textField.font = field.font;
+    if(field.textColor) _textField.textColor = field.textColor;
   }  
 }
 

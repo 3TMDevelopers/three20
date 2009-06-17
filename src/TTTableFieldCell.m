@@ -9,6 +9,7 @@
 #import "Three20/TTNavigationCenter.h"
 #import "Three20/TTURLCache.h"
 #import "Three20/TTDefaultStyleSheet.h"
+#import "Three20/TTSearchBar.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -267,6 +268,10 @@ static CGFloat kDefaultIconSize = 50;
     _titleLabel.highlightedTextColor = TTSTYLEVAR(highlightedTextColor);
     _titleLabel.textAlignment = UITextAlignmentRight;
     [self.contentView addSubview:_titleLabel];
+    
+    _label.font = TTSTYLEVAR(tableTitleValueFont);
+    _label.adjustsFontSizeToFitWidth = YES;
+    _label.minimumFontSize = 8;
 	}
 	return self;
 }
@@ -600,19 +605,32 @@ static CGFloat kDefaultIconSize = 50;
     image = field.defaultImage;
   }
   if (_iconView.url) {
-    CGFloat iconWidth = image
-      ? image.size.width
-      : (field.image ? kDefaultIconSize : 0);
-    CGFloat iconHeight = image
-      ? image.size.height
-      : (field.image ? kDefaultIconSize : 0);
+      CGFloat iconWidth = image
+        ? image.size.width
+        : (field.image ? kDefaultIconSize : 0);
+      CGFloat iconHeight = image
+        ? image.size.height
+        : (field.image ? kDefaultIconSize : 0);
+
+    TTImageStyle* style = [field.imageStyle firstStyleOfClass:[TTImageStyle class]];
+    if (style) {
+      _iconView.contentMode = style.contentMode;
+      _iconView.clipsToBounds = YES;
+      _iconView.backgroundColor = [UIColor clearColor];
+      if (style.size.width) {
+        iconWidth = style.size.width;
+      }
+      if (style.size.height) {
+        iconWidth = style.size.height;
+      }
+    }
 
     _iconView.frame = CGRectMake(kHPadding, floor(self.height/2 - iconHeight/2),
-      iconWidth, iconHeight);
-
-    CGFloat innerWidth = self.contentView.width - (kHPadding*2 + iconWidth + kKeySpacing);
+                                 iconWidth, iconHeight);
+    
+    CGFloat innerWidth = self.contentView.width - (kHPadding*2 + _iconView.width + kKeySpacing);
     CGFloat innerHeight = self.contentView.height - kVPadding*2;
-    _label.frame = CGRectMake(kHPadding + iconWidth + kKeySpacing, kVPadding,
+    _label.frame = CGRectMake(kHPadding + _iconView.width + kKeySpacing, kVPadding,
       innerWidth, innerHeight);
   } else {
     _label.frame = CGRectInset(self.contentView.bounds, kHPadding, kVPadding);
@@ -630,6 +648,7 @@ static CGFloat kDefaultIconSize = 50;
     TTImageTableField* field = object;
     _iconView.defaultImage = field.defaultImage;
     _iconView.url = field.image;
+    _iconView.style = field.imageStyle;
   }  
 }
 @end
@@ -1139,3 +1158,49 @@ static CGFloat kDefaultIconSize = 50;
 }
 
 @end
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+@implementation TTSearchBarTableFieldCell
+
++ (CGFloat)tableView:(UITableView*)tableView rowHeightForItem:(id)item {
+  return TOOLBAR_HEIGHT;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString*)identifier {
+  if (self = [super initWithFrame:frame reuseIdentifier:identifier]) {
+    _searchBar = nil;
+	}
+	return self;
+}
+
+- (void)dealloc {
+  [_searchBar release];
+	[super dealloc];
+}
+
+- (void)layoutSubviews {
+  [super layoutSubviews];
+  _searchBar.frame = self.contentView.bounds;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// TTTableViewCell
+
+- (id)object {
+  return _searchBar;
+}
+
+- (void)setObject:(id)object {
+  if (_searchBar != object) {
+    [_searchBar removeFromSuperview];
+    [_searchBar release];
+    _searchBar = [object retain];
+    [self.contentView addSubview:_searchBar];
+  }  
+}
+
+@end
+

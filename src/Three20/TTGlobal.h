@@ -187,6 +187,16 @@ void TTNetworkRequestStarted();
 void TTNetworkRequestStopped();
 
 /**
+ * Gets the current runtime version of iPhone OS.
+ */
+float TTOSVersion();
+
+/**
+ * Checks if the link-time version of the OS is at least a certain version.
+ */
+BOOL TTOSVersionIsAtLeast(float version);
+
+/**
  * Gets the current system locale chosen by the user.
  *
  * This is necessary because [NSLocale currentLocale] always returns en_US.

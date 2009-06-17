@@ -168,12 +168,13 @@
 
 @implementation TTImageTableField
 
-@synthesize defaultImage = _defaultImage, image = _image;
+@synthesize defaultImage = _defaultImage, image = _image, imageStyle = _imageStyle;
 
 - (id)init {
   if (self = [super init]) {
     _defaultImage = nil;
     _image = nil;
+    _imageStyle = nil;
   }
   return self;
 }
@@ -194,6 +195,7 @@
 - (void)dealloc {
   [_image release];
   [_defaultImage release];
+  [_imageStyle release];
   [super dealloc];
 }
 
@@ -306,26 +308,17 @@
 
 @implementation TTTextViewTableField
 
-@synthesize delegate = _delegate, placeholder = _placeholder, text = _text;
-
-- (id)initWithText:(NSString*)text {
-  if (self = [self init]) {
-    self.text = text;
-  }
-  return self;
-}
+@synthesize delegate = _delegate, placeholder = _placeholder;
 
 - (id)init {
   if (self = [super init]) {
     _delegate = nil;
     _placeholder = nil;
-    _text = nil;
   }
   return self;
 }
 
 - (void)dealloc {
-  [_text release];
   [_placeholder release];
   [super dealloc];
 }

@@ -2,6 +2,7 @@
 #import "Three20/TTNavigationCenter.h"
 #import "Three20/TTView.h"
 #import "Three20/TTDefaultStyleSheet.h"
+#import "Three20/TTTableView.h"
 #import "Three20/TTTableFieldCell.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,6 +34,10 @@ static const CGFloat kDesiredTableHeight = 150;
   return self;
 }
 
+- (void)dealloc {
+  [super dealloc];
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // UITextFieldDelegate
 
@@ -61,10 +66,6 @@ static const CGFloat kDesiredTableHeight = 150;
 - (void)textFieldDidEndEditing:(UITextField *)textField {
   if ([_delegate respondsToSelector:@selector(textFieldDidEndEditing:)]) {
     [_delegate textFieldDidEndEditing:textField];
-  }
-  
-  if (_textField.dataSource) {
-    textField.text = @"";
   }
 }
 
@@ -103,7 +104,7 @@ static const CGFloat kDesiredTableHeight = 150;
     if (!_textField.searchesAutomatically) {
       [_textField search];
     } else {
-      [_textField resignFirstResponder];
+      [_textField performSelector:@selector(doneAction)];
     }
   }
   return shouldReturn;
@@ -221,6 +222,7 @@ static const CGFloat kDesiredTableHeight = 150;
     [self search];
   }
 }
+
 - (void)dispatchUpdate:(NSTimer*)timer {
   _searchTimer = nil;
   [self autoSearch];
@@ -252,6 +254,10 @@ static const CGFloat kDesiredTableHeight = 150;
 
 - (void)doneAction {
   [self resignFirstResponder];
+
+  if (self.dataSource) {
+    self.text = @"";
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -363,7 +369,7 @@ static const CGFloat kDesiredTableHeight = 150;
 
 - (UITableView*)tableView {
   if (!_tableView) {
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView = [[TTTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.backgroundColor = TTSTYLEVAR(searchTableBackgroundColor);
     _tableView.separatorColor = TTSTYLEVAR(searchTableSeparatorColor);
     _tableView.rowHeight = _rowHeight;
@@ -420,12 +426,11 @@ static const CGFloat kDesiredTableHeight = 150;
         [superview addSubview:_shadowView];
       }
     }
+    
+    [_tableView deselectRowAtIndexPath:_tableView.indexPathForSelectedRow animated:NO];
   } else {
-    UIView* parent = self.superview;
-    if (parent) {
-      [_tableView removeFromSuperview];
-      [_shadowView removeFromSuperview];
-    }
+    [_tableView removeFromSuperview];
+    [_shadowView removeFromSuperview];
   }
 }
 

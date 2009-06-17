@@ -9,6 +9,7 @@
 
 static CGFloat kTabMargin = 10;
 static CGFloat kPadding = 10;
+static const NSInteger kMaxBadgeNumber = 99;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -302,15 +303,13 @@ static CGFloat kPadding = 10;
 
 @implementation TTTabGrid
 
+@synthesize columnCount = _columnCount;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // private
 
-- (NSInteger)columnCount {
-  return 3;
-}
-
 - (NSInteger)rowCount {
-  return ceil((float)self.tabViews.count / [self columnCount]);
+  return ceil((float)self.tabViews.count / self.columnCount);
 }
 
 - (void)updateTabStyles {
@@ -318,20 +317,34 @@ static CGFloat kPadding = 10;
   int rowCount = [self rowCount];
   int cellCount = rowCount * columnCount;
 
-  int column = 0;
-  for (TTTab* tab in self.tabViews) {
-    if (column == 0) {
-      [tab setStylesWithSelector:@"tabGridTabTopLeft:"];
-    } else if (column == columnCount-1) {
-      [tab setStylesWithSelector:@"tabGridTabTopRight:"];
-    } else if (column == cellCount - columnCount) {
-      [tab setStylesWithSelector:@"tabGridTabBottomLeft:"];
-    } else if (column == cellCount - 1) {
-      [tab setStylesWithSelector:@"tabGridTabBottomRight:"];
-    } else {
-      [tab setStylesWithSelector:@"tabGridTabCenter:"];
+  if (self.tabViews.count > columnCount) {
+    int column = 0;
+    for (TTTab* tab in self.tabViews) {
+      if (column == 0) {
+        [tab setStylesWithSelector:@"tabGridTabTopLeft:"];
+      } else if (column == columnCount-1) {
+        [tab setStylesWithSelector:@"tabGridTabTopRight:"];
+      } else if (column == cellCount - columnCount) {
+        [tab setStylesWithSelector:@"tabGridTabBottomLeft:"];
+      } else if (column == cellCount - 1) {
+        [tab setStylesWithSelector:@"tabGridTabBottomRight:"];
+      } else {
+        [tab setStylesWithSelector:@"tabGridTabCenter:"];
+      }
+      ++column;
     }
-    ++column;
+  } else {
+    int column = 0;
+    for (TTTab* tab in self.tabViews) {
+      if (column == 0) {
+        [tab setStylesWithSelector:@"tabGridTabLeft:"];
+      } else if (column == columnCount-1) {
+        [tab setStylesWithSelector:@"tabGridTabRight:"];
+      } else {
+        [tab setStylesWithSelector:@"tabGridTabCenter:"];
+      }
+      ++column;
+    }
   }
 }
 
@@ -352,6 +365,7 @@ static CGFloat kPadding = 10;
 - (id)initWithFrame:(CGRect)frame  {
   if (self = [super initWithFrame:frame]) {
     self.style = TTSTYLE(tabGrid);
+    _columnCount = 3;
   }
   return self;
 }
@@ -386,7 +400,7 @@ static CGFloat kPadding = 10;
 - (id)initWithItem:(TTTabItem*)tabItem tabBar:(TTTabBar*)tabBar {
   if (self = [self initWithFrame:CGRectZero]) {
     _badge = nil;
-        
+    
     self.tabItem = tabItem;
   }
   return self;
@@ -409,7 +423,11 @@ static CGFloat kPadding = 10;
       _badge.userInteractionEnabled = NO;
       [self addSubview:_badge];
     }
-    _badge.text = [NSString stringWithFormat:@"%d", _tabItem.badgeNumber];
+    if (_tabItem.badgeNumber <= kMaxBadgeNumber) {
+      _badge.text = [NSString stringWithFormat:@"%d", _tabItem.badgeNumber];
+    } else {
+      _badge.text = [NSString stringWithFormat:@"%d+", kMaxBadgeNumber];
+    }
     [_badge sizeToFit];
     
     _badge.frame = CGRectMake(self.width - _badge.width-1, 1, _badge.width, _badge.height);

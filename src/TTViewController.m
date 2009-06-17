@@ -113,6 +113,12 @@
   self.view.backgroundColor = TTSTYLEVAR(backgroundColor);
 }
 
+- (void)viewDidLoad {
+	[super viewDidLoad];
+	self.navigationBarTintColor = self.navigationController.navigationBar.tintColor;
+	self.navigationBarStyle = self.navigationController.navigationBar.barStyle;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
   if (_unloaded) {
     _unloaded = NO;
